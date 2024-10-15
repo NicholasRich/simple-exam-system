@@ -26,7 +26,7 @@ public abstract class QuestionFactory implements Question {
 
     public static Question getInstance(String type, String formulation, String answer) {
         if (!QuestionUtil.isValidContent(formulation)) {
-            throw new IllegalArgumentException("Invalid formulation!");
+            throw new IllegalArgumentException("The formulation cannot be empty!");
         }
         Question question;
         switch (type) {
@@ -35,12 +35,26 @@ public abstract class QuestionFactory implements Question {
                 QUESTION_MAP.get(FREE_RESPONSE).add(question);
             }
             case MULTIPLE_CHOICES -> {
-                question = new MultipleChoicesQuestion(formulation, answer);
+                question = new MultipleChoicesQuestion(formulation, QuestionUtil.sortedAnswer(answer));
                 QUESTION_MAP.get(MULTIPLE_CHOICES).add(question);
             }
             default -> throw new IllegalArgumentException("Unknown question type: " + type);
         }
         return question;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestionFactory questionFactory = (QuestionFactory) o;
+        return formulation.equals(questionFactory.formulation);
+    }
+
+    @Override
+    public int hashCode() {
+        int hc = 17;
+        return 31 * hc + (formulation == null ? 0 : formulation.hashCode());
     }
 
 }

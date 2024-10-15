@@ -8,9 +8,9 @@ import java.util.List;
 public final class MultipleChoicesQuestion extends QuestionFactory {
     private final List<String> answers;
 
-    public MultipleChoicesQuestion(String formulation, String answer) {
+    public MultipleChoicesQuestion(String formulation, List<String> answers) {
         super(formulation);
-        this.answers = new ArrayList<>(QuestionUtil.sortedAnswer(answer));
+        this.answers = answers;
     }
 
     @Override

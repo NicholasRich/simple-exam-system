@@ -29,7 +29,7 @@ public class ExamTest {
     public void CheckFreeResponseQuestion() {
         List<Question> questionList = QuestionFactory.QUESTION_MAP.get(QuestionFactory.FREE_RESPONSE);
         for (Question question : questionList) {
-            assertThrowsExactly(IllegalArgumentException.class,()->question.checkAnswer(""));
+            assertThrowsExactly(IllegalArgumentException.class, () -> question.checkAnswer(""));
             assertTrue(question.checkAnswer(" MY   AnSWER  "));
             assertFalse(question.checkAnswer("AnSWER"));
         }
@@ -40,7 +40,7 @@ public class ExamTest {
     public void CheckMultipleChoicesQuestion() {
         List<Question> questionList = QuestionFactory.QUESTION_MAP.get(QuestionFactory.MULTIPLE_CHOICES);
         for (Question question : questionList) {
-            assertThrowsExactly(IllegalArgumentException.class,()->question.checkAnswer(""));
+            assertThrowsExactly(IllegalArgumentException.class, () -> question.checkAnswer(""));
             assertTrue(question.checkAnswer("  B,  D,  c,a "));
             assertFalse(question.checkAnswer("A,A,b"));
         }
