@@ -7,7 +7,7 @@ import java.util.List;
 public interface Exam {
     List<Question> generateQuiz(int number);
 
-    List<Question> revise(int number);
+    List<Question> revise(Student student, int number);
 
     Double takeQuiz(Student student, List<Question> questions, List<String> answers);
 
