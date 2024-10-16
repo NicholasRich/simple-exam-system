@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class StudentExam implements Exam {
+public final class StudentExam implements Exam {
     @Override
     public List<Question> generateQuiz(int number) {
         List<Question> freeResponseQuestions = QuestionFactory.QUESTION_MAP.get(QuestionFactory.FREE_RESPONSE);
