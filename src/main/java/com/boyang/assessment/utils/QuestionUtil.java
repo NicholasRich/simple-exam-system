@@ -20,9 +20,9 @@ public class QuestionUtil {
         List<Question> result = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < number; i++) {
-            Question e = pool.get(random.nextInt(pool.size()));
-            result.add(e);
-            pool = pool.stream().filter(item -> !item.equals(e)).toList();
+            Question question = pool.get(random.nextInt(pool.size()));
+            result.add(question);
+            pool = pool.stream().filter(item -> !item.equals(question)).toList();
         }
         return result;
     }
