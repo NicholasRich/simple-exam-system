@@ -1,11 +1,11 @@
-package com.boyang.exam.quiz;
+package com.boyang.assessment.quiz;
 
-import com.boyang.exam.question.FreeResponseQuestion;
-import com.boyang.exam.question.Question;
-import com.boyang.exam.question.QuestionFactory;
-import com.boyang.exam.student.Statistic;
-import com.boyang.exam.student.Student;
-import com.boyang.exam.utils.QuestionUtil;
+import com.boyang.assessment.question.FreeResponseQuestion;
+import com.boyang.assessment.question.Question;
+import com.boyang.assessment.question.QuestionFactory;
+import com.boyang.assessment.student.Statistic;
+import com.boyang.assessment.student.Student;
+import com.boyang.assessment.utils.QuestionUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.boyang.exam.question;
+package com.boyang.assessment.question;
 
 public interface Question {
     boolean checkAnswer(String answer);

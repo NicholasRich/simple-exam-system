@@ -1,7 +1,7 @@
-package com.boyang.exam.quiz;
+package com.boyang.assessment.quiz;
 
-import com.boyang.exam.student.Student;
-import com.boyang.exam.question.Question;
+import com.boyang.assessment.student.Student;
+import com.boyang.assessment.question.Question;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package com.boyang.exam.student;
+package com.boyang.assessment.student;
 
-import com.boyang.exam.utils.StringUtil;
+import com.boyang.assessment.utils.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

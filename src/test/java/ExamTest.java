@@ -1,12 +1,12 @@
-import com.boyang.exam.question.FreeResponseQuestion;
-import com.boyang.exam.question.MultipleChoicesQuestion;
-import com.boyang.exam.question.Question;
-import com.boyang.exam.question.QuestionFactory;
-import com.boyang.exam.quiz.StudentQuiz;
-import com.boyang.exam.student.Statistic;
-import com.boyang.exam.student.Student;
-import com.boyang.exam.utils.QuestionUtil;
-import com.boyang.exam.utils.StringUtil;
+import com.boyang.assessment.question.FreeResponseQuestion;
+import com.boyang.assessment.question.MultipleChoicesQuestion;
+import com.boyang.assessment.question.Question;
+import com.boyang.assessment.question.QuestionFactory;
+import com.boyang.assessment.quiz.StudentQuiz;
+import com.boyang.assessment.student.Statistic;
+import com.boyang.assessment.student.Student;
+import com.boyang.assessment.utils.QuestionUtil;
+import com.boyang.assessment.utils.StringUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

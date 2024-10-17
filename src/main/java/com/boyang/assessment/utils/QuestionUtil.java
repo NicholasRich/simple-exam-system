@@ -1,6 +1,6 @@
-package com.boyang.exam.utils;
+package com.boyang.assessment.utils;
 
-import com.boyang.exam.question.Question;
+import com.boyang.assessment.question.Question;
 
 import java.util.ArrayList;
 import java.util.List;
