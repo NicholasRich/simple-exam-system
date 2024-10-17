@@ -8,6 +8,14 @@ import java.util.List;
 public final class MultipleChoicesQuestion extends QuestionFactory {
     private final List<String> answer;
 
+    /**
+     * The constructor of MultipleChoicesQuestion
+     * It's used by {@link QuestionFactory} to create MultipleChoicesQuestion instance
+     * Recommend to use {@link QuestionFactory#getInstance(String, List)} to create instance
+     *
+     * @param formulation The question formulation
+     * @param answer      The correct answer of the question
+     */
     MultipleChoicesQuestion(String formulation, List<String> answer) {
         super(formulation);
         if (answer == null || answer.isEmpty()) {
@@ -19,6 +27,13 @@ public final class MultipleChoicesQuestion extends QuestionFactory {
         this.answer = answer;
     }
 
+    /**
+     * Check if the answer is right or not for this question
+     *
+     * @param answer The answer to be checked
+     * @return If the answer is correct, return true, otherwise return false
+     * @throws IllegalArgumentException If the answer is null or empty
+     */
     @Override
     public boolean checkAnswer(String answer) {
         if (StringUtil.isEmpty(answer)) {
