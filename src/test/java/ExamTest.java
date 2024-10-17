@@ -6,6 +6,7 @@ import com.boyang.exam.quiz.StudentQuiz;
 import com.boyang.exam.student.Statistic;
 import com.boyang.exam.student.Student;
 import com.boyang.exam.utils.QuestionUtil;
+import com.boyang.exam.utils.StringUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -53,13 +54,6 @@ public class ExamTest {
         assertThrowsExactly(IllegalArgumentException.class, () -> question.checkAnswer(null));
         assertTrue(question.checkAnswer("  B,  D,  c,a "));
         assertFalse(question.checkAnswer("A,A,b"));
-    }
-
-    @Test
-    public void randomQuestionsTest() {
-        QuestionUtil.getRandomQuestions(4, QuestionFactory.FREE_RESPONSE_QUESTIONS)
-                .forEach(item -> System.out.println(item.getFormulation()));
-        System.out.println(QuestionFactory.FREE_RESPONSE_QUESTIONS.size());
     }
 
     @Test
@@ -208,4 +202,17 @@ public class ExamTest {
                 revisions: 0, [null, null]""", studentQuiz.generateStatistics(student));
     }
 
+    @Test
+    public void randomQuestionsTest() {
+        assertThrowsExactly(IllegalArgumentException.class, () -> QuestionUtil.getRandomQuestions(0, null));
+        List<Question> randomQuestions = QuestionUtil.getRandomQuestions(4, QuestionFactory.FREE_RESPONSE_QUESTIONS);
+        assertEquals(4, randomQuestions.size());
+        assertEquals(randomQuestions.size(), new HashSet<>(randomQuestions).size());
+    }
+
+    @Test
+    public void isEmptyTest() {
+        assertTrue(StringUtil.isEmpty(""));
+        assertFalse(StringUtil.isEmpty("fsd"));
+    }
 }
