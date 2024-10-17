@@ -9,13 +9,13 @@ public final class FreeResponseQuestion extends QuestionFactory {
     private final String answer;
 
     /**
-     * The constructor of FreeResponseQuestion.
+     * The constructor of <code>FreeResponseQuestion</code>.
      * It's used by {@link QuestionFactory} to create FreeResponseQuestion instance.
      * Recommend to use {@link QuestionFactory#getInstance(String, String)} to create instance
      *
      * @param formulation The question formulation
      * @param answer      The correct answer of the question
-     * @throws IllegalArgumentException If the formulation is null or empty, check {@link QuestionFactory#QuestionFactory(String)}
+     * @throws IllegalArgumentException Check {@link QuestionFactory#QuestionFactory(String)}
      * @throws IllegalArgumentException If the answer is null or empty
      */
     FreeResponseQuestion(String formulation, String answer) {
@@ -40,7 +40,7 @@ public final class FreeResponseQuestion extends QuestionFactory {
     }
 
     /**
-     * Format the answer into a specific format
+     * Format the answer into a specific format.
      * It's used by {@link FreeResponseQuestion#checkAnswer(String)}
      * to format the correct answer and answer param into the same format
      *

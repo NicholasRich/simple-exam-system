@@ -10,5 +10,9 @@ public interface Question {
      */
     boolean checkAnswer(String answer);
 
+    /**
+     * Get the formulation of the question
+     * @return The formulation field
+     */
     String getFormulation();
 }
