@@ -1,59 +1,30 @@
 package com.boyang.exam.utils;
 
-import com.boyang.exam.interfaces.Question;
+import com.boyang.exam.question.Question;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class QuestionUtil {
-    public static boolean isValidContent(String content) {
-        return content != null && !content.isBlank();
-    }
-
-    public static boolean isValidAnswer(String answer) {
-        if (!isValidContent(answer)) {
-            throw new IllegalArgumentException("The answer cannot be empty!");
+    public static List<Question> getRandomQuestions(int number, List<Question> pool) {
+        if (number < 1) {
+            throw new IllegalArgumentException("The number of question cannot be less than 1!");
         }
-        int size = Arrays.stream(answer.split(",")).toList().size();
-        return size > 1 && size < 5;
-    }
-
-    public static List<String> sortedAnswer(String answer) {
-        if (!isValidAnswer(answer)) {
-            throw new IllegalArgumentException("The number of answers must between 2 and 4!");
+        if (pool == null || pool.isEmpty()) {
+            throw new IllegalArgumentException("Question pool cannot be null or empty!");
         }
-        return Arrays.stream(answer.split(","))
-                .map(item -> item.strip().toUpperCase()).sorted().toList();
-    }
-
-    public static String formattedAnswer(String answer) {
-        if (!isValidContent(answer)) {
-            throw new IllegalArgumentException("The answer cannot be empty!");
-        }
-        List<String> result = Arrays.stream(answer.strip().split(" +"))
-                .map(String::toLowerCase).toList();
-        return String.join(" ", result);
-    }
-
-    public static List<Question> randomQuestions(int count, List<Question> list) {
-        if (count < 1) {
-            throw new IllegalArgumentException("The number of questions cannot be less than 1!");
-        }
-        if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("Question list cannot be empty!");
+        if (number > pool.size()) {
+            throw new IllegalArgumentException("The number of question cannot be greater than the size of question pool!");
         }
         List<Question> result = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < count; i++) {
-            int size = list.size();
-            Question e = list.get(random.nextInt(size));
+        for (int i = 0; i < number; i++) {
+            Question e = pool.get(random.nextInt(pool.size()));
             result.add(e);
-            list = list.stream().filter(item -> !item.equals(e))
+            pool = pool.stream().filter(item -> !item.equals(e))
                     .toList();
         }
         return result;
     }
-
 }
