@@ -76,7 +76,7 @@ public class Statistic {
     @Override
     public String toString() {
         return "verdict: " + verdict + "\n" +
-                "attempts: " + attempts + ", " + attemptScores.toString() + "\n" +
-                "revisions: " + revisions + ", " + revisionScores.toString();
+                "attempts: " + attempts + ", " + attemptScores + "\n" +
+                "revisions: " + revisions + ", " + revisionScores;
     }
 }
