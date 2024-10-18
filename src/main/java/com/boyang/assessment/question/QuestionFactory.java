@@ -7,13 +7,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The abstract class which implements the {@link Question} interface.
+ * It is used to create the specific question instance and store it.
+ *
+ * @author Boyang Wang
+ */
 public abstract class QuestionFactory implements Question {
+    /**
+     * Denotes the free response question type.
+     */
     public static final String FREE_RESPONSE = "FREE_RESPONSE";
+
+    /**
+     * Denotes the multiple choices question type.
+     */
     public static final String MULTIPLE_CHOICES = "MULTIPLE_CHOICES";
+
+    /**
+     * The map used to store every question instance created by the factory.
+     */
     public static final Map<String, List<Question>> QUESTION_MAP = Map.of(
             FREE_RESPONSE, new ArrayList<>(),
             MULTIPLE_CHOICES, new ArrayList<>()
     );
+
+    /**
+     * The formulation of the question.
+     */
     private final String formulation;
 
     /**

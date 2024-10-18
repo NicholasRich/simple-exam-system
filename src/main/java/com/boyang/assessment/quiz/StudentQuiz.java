@@ -6,19 +6,36 @@ import com.boyang.assessment.question.Question;
 import com.boyang.assessment.question.QuestionFactory;
 import com.boyang.assessment.student.Statistic;
 import com.boyang.assessment.student.Student;
-import com.boyang.assessment.utils.QuestionUtil;
+import com.boyang.assessment.utils.QuizUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public final class StudentQuiz implements Quiz {
+/**
+ * This class implements the {@link Quiz} interface.
+ * It implements the business logic associated with student taking quiz.
+ *
+ * @author Boyang Wang
+ */
+public class StudentQuiz implements Quiz {
+    /**
+     * The unique {@link StudentQuiz} instance.
+     */
     private static final StudentQuiz INSTANCE = new StudentQuiz();
 
+    /**
+     * Privatize the construction method to make sure there is only 1 {@link StudentQuiz} instance.
+     */
     private StudentQuiz() {
     }
 
+    /**
+     * Get the unique {@link StudentQuiz} instance.
+     *
+     * @return The {@link StudentQuiz#INSTANCE}.
+     */
     public static StudentQuiz getInstance() {
         return INSTANCE;
     }
@@ -29,7 +46,7 @@ public final class StudentQuiz implements Quiz {
      * The generated question list contains at least 1 question for each question type.
      *
      * @throws IllegalArgumentException If the number is less than 2 or greater than the number of questions in {@link QuestionFactory#QUESTION_MAP}.
-     * @throws IllegalArgumentException Check {@link QuestionUtil#getRandomQuestions(int, List)}.
+     * @throws IllegalArgumentException Check {@link QuizUtil#getRandomQuestions(int, List)}.
      * @see Quiz#generateQuiz(int)
      */
     @Override
@@ -41,8 +58,36 @@ public final class StudentQuiz implements Quiz {
         }
         List<Question> result = new ArrayList<>();
         Map<String, Integer> questionCountMap = randomQuestionCount(number, freeResponseQuestions.size(), multipleChoicesQuestions.size());
-        result.addAll(QuestionUtil.getRandomQuestions(questionCountMap.get(QuestionFactory.FREE_RESPONSE), freeResponseQuestions));
-        result.addAll(QuestionUtil.getRandomQuestions(questionCountMap.get(QuestionFactory.MULTIPLE_CHOICES), multipleChoicesQuestions));
+        result.addAll(QuizUtil.getRandomQuestions(questionCountMap.get(QuestionFactory.FREE_RESPONSE), freeResponseQuestions));
+        result.addAll(QuizUtil.getRandomQuestions(questionCountMap.get(QuestionFactory.MULTIPLE_CHOICES), multipleChoicesQuestions));
+        return result;
+    }
+
+    /**
+     * The implementation of {@link Quiz#takeQuiz(Student, List, List)}.
+     * Only if the student's {@link Statistic#getVerdict()} is {@link Statistic#TBD}, he can take the regular quiz.
+     * The score is calculated by the correctly answered question count / the question list size.
+     * If the score is less than 0.5, the student will fail the exam. Otherwise, he can get a pass.
+     * After taking the quiz, the statistic of the quiz will be logged.
+     *
+     * @throws NullPointerException     Check {@link StudentQuiz#validQuiz(Student, List, List)}.
+     * @throws IllegalArgumentException Check {@link StudentQuiz#validQuiz(Student, List, List)}.
+     * @throws IllegalArgumentException Check{@link Statistic#setAttempts(int)}.
+     * @see Quiz#takeQuiz(Student, List, List)
+     */
+    @Override
+    public Double takeQuiz(Student student, List<Question> questions, List<String> answers) {
+        validQuiz(student, questions, answers);
+        int attempts = student.getStatistic().getAttempts();
+        student.getStatistic().setAttempts(attempts + 1);
+        int correct = logAnsweredQuestions(student, questions, answers);
+        double result = correct / (double) questions.size();
+        if (result >= 0.5) {
+            student.getStatistic().setVerdict(Statistic.PASS);
+        } else if (result < 0.5 && student.getStatistic().getAttempts() == 1) {
+            student.getStatistic().setVerdict(Statistic.FAIL);
+        }
+        student.getStatistic().getAttemptScores().set(attempts, result);
         return result;
     }
 
@@ -55,7 +100,7 @@ public final class StudentQuiz implements Quiz {
      *
      * @throws NullPointerException     If the student is null.
      * @throws IllegalArgumentException If the number is less than 2 or greater than the number of questions in {@link QuestionFactory#QUESTION_MAP}.
-     * @throws IllegalArgumentException Check {@link QuestionUtil#getRandomQuestions(int, List)}.
+     * @throws IllegalArgumentException Check {@link QuizUtil#getRandomQuestions(int, List)}.
      * @see Quiz#generateQuiz(int)
      */
     @Override
@@ -71,38 +116,11 @@ public final class StudentQuiz implements Quiz {
         Map<String, Integer> questionCountMap = randomQuestionCount(number, freeResponseQuestions.size(), multipleChoicesQuestions.size());
         int freeResponseQuestionCount = questionCountMap.get(QuestionFactory.FREE_RESPONSE);
         int multipleChoicesQuestionCount = questionCountMap.get(QuestionFactory.MULTIPLE_CHOICES);
-        List<Question> answeredFreeResponseQuestions = student.getStatistic().getAnsweredFreeResponseQuestions().stream().toList();
-        List<Question> answeredMultipleChoicesQuestions = student.getStatistic().getAnsweredMultipleChoicesQuestions().stream().toList();
+        List<Question> answeredFreeResponseQuestions = student.getStatistic().getAnsweredQuestionMap().get(QuestionFactory.FREE_RESPONSE).stream().toList();
+        List<Question> answeredMultipleChoicesQuestions = student.getStatistic().getAnsweredQuestionMap().get(QuestionFactory.MULTIPLE_CHOICES).stream().toList();
         List<Question> result = new ArrayList<>();
         result.addAll(getUnansweredQuestions(freeResponseQuestionCount, answeredFreeResponseQuestions, freeResponseQuestions));
         result.addAll(getUnansweredQuestions(multipleChoicesQuestionCount, answeredMultipleChoicesQuestions, multipleChoicesQuestions));
-        return result;
-    }
-
-    /**
-     * The implementation of {@link Quiz#takeQuiz(Student, List, List)}.
-     * Only if the student's {@link Statistic#getVerdict()} is {@link Statistic#TBD}, he can take the regular quiz.
-     * The score is calculated by the correctly answered question count / the question list size.
-     * If the score is less than 0.5, the student will fail the exam. Otherwise, he can get a pass.
-     * After taking the quiz, the statistic of the quiz will be logged.
-     *
-     * @throws NullPointerException     Check {@link StudentQuiz#validQuiz(Student, List, List)}.
-     * @throws IllegalArgumentException Check {@link StudentQuiz#validQuiz(Student, List, List)}.
-     * @see Quiz#takeQuiz(Student, List, List)
-     */
-    @Override
-    public Double takeQuiz(Student student, List<Question> questions, List<String> answers) {
-        validQuiz(student, questions, answers);
-        int correct = logAnsweredQuestions(student, questions, answers);
-        double result = correct / (double) questions.size();
-        if (result >= 0.5) {
-            student.getStatistic().setVerdict(Statistic.PASS);
-        } else if (result < 0.5 && student.getStatistic().getAttempts() == 1) {
-            student.getStatistic().setVerdict(Statistic.FAIL);
-        }
-        int attempts = student.getStatistic().getAttempts();
-        student.getStatistic().getAttemptScores().set(attempts++, result);
-        student.getStatistic().setAttempts(attempts);
         return result;
     }
 
@@ -116,6 +134,7 @@ public final class StudentQuiz implements Quiz {
      * @throws IllegalArgumentException If the student's {@link Statistic#getRevisions()} is greater than 1.
      * @throws NullPointerException     Check {@link StudentQuiz#validQuiz(Student, List, List)}.
      * @throws IllegalArgumentException Check {@link StudentQuiz#validQuiz(Student, List, List)}.
+     * @throws IllegalArgumentException Check {@link Statistic#setRevisions(int)}.
      * @see Quiz#takeRevisionQuiz(Student, List, List)
      */
     @Override
@@ -124,11 +143,11 @@ public final class StudentQuiz implements Quiz {
         if (student.getStatistic().getRevisions() > 1) {
             throw new IllegalArgumentException("The student can only take at most 2 revision quizzes!");
         }
+        int revisions = student.getStatistic().getRevisions();
+        student.getStatistic().setRevisions(revisions + 1);
         int correct = logAnsweredQuestions(student, questions, answers);
         double result = correct / (double) questions.size();
-        int revisions = student.getStatistic().getRevisions();
-        student.getStatistic().getRevisionScores().set(revisions++, result);
-        student.getStatistic().setRevisions(revisions);
+        student.getStatistic().getRevisionScores().set(revisions, result);
         return result;
     }
 
@@ -181,7 +200,7 @@ public final class StudentQuiz implements Quiz {
     }
 
     /**
-     * Get questions that are different from the answered questions in the question pool.
+     * From the given question pool, get questions that are different from the answered questions.
      * If there are not enough unanswered questions in the question pool.
      * The result will contain some answered questions to ensure total number of questions meets the requirement.
      *
@@ -189,17 +208,17 @@ public final class StudentQuiz implements Quiz {
      * @param answeredQuestions The answered question list.
      * @param questions         The question pool.
      * @return The list of the unanswered question.
-     * @throws IllegalArgumentException Check {@link QuestionUtil#getRandomQuestions(int, List)}.
+     * @throws IllegalArgumentException Check {@link QuizUtil#getRandomQuestions(int, List)}.
      */
     private List<Question> getUnansweredQuestions(int number, List<Question> answeredQuestions, List<Question> questions) {
         List<Question> unansweredQuestions = questions.stream()
                 .filter(question -> !answeredQuestions.contains(question)).toList();
         List<Question> result = new ArrayList<>();
         if (number <= unansweredQuestions.size()) {
-            result.addAll(QuestionUtil.getRandomQuestions(number, unansweredQuestions));
+            result.addAll(QuizUtil.getRandomQuestions(number, unansweredQuestions));
         } else {
             result.addAll(unansweredQuestions);
-            result.addAll(QuestionUtil.getRandomQuestions(number - unansweredQuestions.size(), answeredQuestions));
+            result.addAll(QuizUtil.getRandomQuestions(number - unansweredQuestions.size(), answeredQuestions));
         }
         return result;
     }
@@ -218,9 +237,9 @@ public final class StudentQuiz implements Quiz {
             Question question = questions.get(i);
             if (question.checkAnswer(answers.get(i))) {
                 if (question instanceof FreeResponseQuestion) {
-                    student.getStatistic().getAnsweredFreeResponseQuestions().add(question);
+                    student.getStatistic().getAnsweredQuestionMap().get(QuestionFactory.FREE_RESPONSE).add(question);
                 } else {
-                    student.getStatistic().getAnsweredMultipleChoicesQuestions().add(question);
+                    student.getStatistic().getAnsweredQuestionMap().get(QuestionFactory.MULTIPLE_CHOICES).add(question);
                 }
                 correct++;
             }
@@ -236,7 +255,6 @@ public final class StudentQuiz implements Quiz {
      * @param questions The questions to be answered.
      * @param answers   The answer of the student.
      * @throws NullPointerException     If the student is null.
-     * @throws IllegalArgumentException If the student's {@link Statistic#getVerdict()} is not {@link Statistic#TBD}.
      * @throws IllegalArgumentException If the question list is null or empty.
      * @throws IllegalArgumentException If the answer list is null or empty.
      * @throws IllegalArgumentException If the question list size is less than 2.
@@ -245,9 +263,6 @@ public final class StudentQuiz implements Quiz {
     private void validQuiz(Student student, List<Question> questions, List<String> answers) {
         if (student == null) {
             throw new NullPointerException("The student cannot be null!");
-        }
-        if (!Statistic.TBD.equals(student.getStatistic().getVerdict())) {
-            throw new IllegalArgumentException("The student who received the quiz result cannot take another quiz!");
         }
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("The question list cannot be null or empty!");

@@ -5,7 +5,17 @@ import com.boyang.assessment.utils.StringUtil;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * The specific question class which extends the {@link QuestionFactory} and implements the
+ * {@link Question#checkAnswer(String)} method.
+ * Please use {@link QuestionFactory} to create the instance.
+ *
+ * @author Boyang Wang
+ */
 public final class FreeResponseQuestion extends QuestionFactory {
+    /**
+     * The correct answer of the question.
+     */
     private final String answer;
 
     /**

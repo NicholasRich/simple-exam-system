@@ -6,7 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class QuestionUtil {
+/**
+ * The tool class to handle some frequent operations related to quiz.
+ *
+ * @author Boyang Wang
+ */
+public class QuizUtil {
+    /**
+     * Randomly get the unduplicated questions from the question pool.
+     *
+     * @param number The number of the questions you want to get.
+     * @param pool   The question pool which got questions from.
+     * @return A {@link Question} list.
+     * @throws IllegalArgumentException If the number is less than 1.
+     * @throws IllegalArgumentException If the question pool is null or empty.
+     * @throws IllegalArgumentException If the number is greater than the question pool size.
+     */
     public static List<Question> getRandomQuestions(int number, List<Question> pool) {
         if (number < 1) {
             throw new IllegalArgumentException("The number of questions cannot be less than 1!");

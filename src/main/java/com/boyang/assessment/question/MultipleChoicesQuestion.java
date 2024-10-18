@@ -5,7 +5,17 @@ import com.boyang.assessment.utils.StringUtil;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The specific question class which extends the {@link QuestionFactory} and implements the
+ * {@link Question#checkAnswer(String)} method.
+ * Please use {@link QuestionFactory} to create the instance.
+ *
+ * @author Boyang Wang
+ */
 public final class MultipleChoicesQuestion extends QuestionFactory {
+    /**
+     * The correct answer list of the question.
+     */
     private final List<String> answer;
 
     /**

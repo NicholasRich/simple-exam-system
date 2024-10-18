@@ -5,6 +5,12 @@ import com.boyang.assessment.student.Student;
 
 import java.util.List;
 
+/**
+ * This interface contains some common methods related to quiz.
+ * You can implement this interface to satisfy the specific business logic.
+ *
+ * @author Boyang Wang
+ */
 public interface Quiz {
     /**
      * Generate a question list for regular quiz.
