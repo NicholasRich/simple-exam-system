@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * The tool class to handle some frequent operations related to quiz.
+ * The utility class to handle some frequent operations related to quiz.
  *
  * @author Boyang Wang
  */

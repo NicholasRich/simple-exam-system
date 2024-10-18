@@ -1,7 +1,7 @@
 package com.boyang.assessment.utils;
 
 /**
- * The tool class to handle some frequent operations related to {@link String}.
+ * The utility class to handle some frequent operations related to {@link String}.
  *
  * @author Boyang Wang
  */
